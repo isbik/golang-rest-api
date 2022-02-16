@@ -1,0 +1,13 @@
+server:
+  host: 127.0.0.1
+  port: 8000
+
+database:
+  host: 127.0.0.1
+  port: 27017
+  name: shopparty
+  user: admin
+  ssl: false
+
+jwt:
+  secret: KwEZEJ4drg4AqDUH
