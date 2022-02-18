@@ -17,11 +17,12 @@ func AuthMiddleware() gin.HandlerFunc {
 		authHeader := c.GetHeader("Authorization")
 		tokenString := authHeader[len(BEARER_SCHEMA):]
 
-		token, err := services.ValidateToken(tokenString)
+		token, err := services.ParseToken(tokenString)
+
 		if token.Valid {
 			if claims, ok := token.Claims.(*services.CustomClaims); ok {
-
-				fmt.Println(claims.Id)
+				c.Set("userId", claims.Id)
+				c.Next()
 			} else {
 				c.AbortWithStatusJSON(http.StatusInternalServerError, "Error paring token")
 			}

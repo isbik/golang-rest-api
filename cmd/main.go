@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"main/internal/auth"
+	"main/internal/photo"
 	"main/internal/user"
 	"main/pkg/config"
 	"main/pkg/database"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+
 	viper.AutomaticEnv()
 
 	err := config.ReadConf()
@@ -30,6 +32,7 @@ func main() {
 
 	auth.AuthRoutes(router)
 	user.UserRoutes(router)
+	photo.PhotoRoutes(router)
 
 	router.Run(":" + viper.GetString("server.port"))
 

@@ -13,4 +13,5 @@ func UserRoutes(router *gin.Engine) {
 	users.GET("/", GetUsers())
 	users.GET("/me", GetCurrentUser())
 	users.GET("/:user_id", GetUser())
+	users.GET("/:user_id/photos", GetUserPhotos())
 }

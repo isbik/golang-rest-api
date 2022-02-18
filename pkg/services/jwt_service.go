@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/spf13/viper"
 )
 
 type JWTUser struct {
@@ -13,16 +12,22 @@ type JWTUser struct {
 }
 
 type CustomClaims struct {
+	Id string `json:"id"`
 	jwt.StandardClaims
 }
 
-var secret = []byte(viper.GetString("jwt.secret"))
+var secret = []byte("my_secret_key")
 
-func GenerateToken(user JWTUser) (string, error) {
+func GenerateToken(user JWTUser) string {
+	fmt.Println("user", user)
+
+	fmt.Println(user.Id)
+
 	claims := &CustomClaims{
+		Id: user.Id,
 		StandardClaims: jwt.StandardClaims{
-			Id:        user.Id,
 			ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
+			IssuedAt:  time.Now().Unix(),
 		},
 	}
 
@@ -30,18 +35,17 @@ func GenerateToken(user JWTUser) (string, error) {
 
 	t, err := token.SignedString(secret)
 	if err != nil {
-		return "", err
+		panic(err)
 	}
 
-	return t, nil
+	return t
 }
 
-func ValidateToken(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(tokenString string) (*jwt.Token, error) {
+	return jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-
 		return secret, nil
 	})
 

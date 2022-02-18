@@ -40,21 +40,34 @@ func CountUsersByEmail(email string) (int64, error) {
 	return count, nil
 }
 
-func FindUserById(id string) (User, error) {
+func FindUserById(id string, user *User) error {
 	var userCollection *mongo.Collection = database.MI.DB.Collection("user")
 
-	var ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
-
-	var user User
-
-	err := userCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&user)
-	defer cancel()
+	userId, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		return user, err
+		return err
 	}
 
-	return user, nil
+	err = userCollection.FindOne(context.Background(), bson.M{"_id": userId}).Decode(user)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func FindUserByEmail(email string, user *User) error {
+	var userCollection *mongo.Collection = database.MI.DB.Collection("user")
+
+	err := userCollection.FindOne(context.Background(), bson.M{"email": email}).Decode(user)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func FindAllUsers() ([]User, error) {
