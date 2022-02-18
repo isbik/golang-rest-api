@@ -33,12 +33,12 @@ func GenerateToken(user JWTUser) string {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	t, err := token.SignedString(secret)
+	tokenString, err := token.SignedString(secret)
 	if err != nil {
 		panic(err)
 	}
 
-	return t
+	return tokenString
 }
 
 func ParseToken(tokenString string) (*jwt.Token, error) {

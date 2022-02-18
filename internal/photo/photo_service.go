@@ -3,7 +3,6 @@ package photo
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"main/internal/album"
 	photo "main/internal/photo/dto"
@@ -29,7 +28,6 @@ func FindUserPhotos(userId string, page int64, limit int64, photos *[]Photo) err
 	options.SetLimit(limit)
 
 	cursor, err := photoCollection.Find(context.Background(), bson.M{"owner": id}, options)
-
 	if err != nil {
 		return err
 	}
@@ -46,13 +44,11 @@ func DeletePhotoById(id string) error {
 	var photoCollection *mongo.Collection = database.MI.DB.Collection("photo")
 
 	photoId, err := primitive.ObjectIDFromHex(id)
-
 	if err != nil {
 		return err
 	}
 
 	_, err = photoCollection.DeleteOne(context.Background(), bson.M{"_id": photoId})
-
 	if err != nil {
 		return err
 	}
@@ -64,13 +60,11 @@ func FindPhotoById(id string, photo *Photo) error {
 	var photoCollection *mongo.Collection = database.MI.DB.Collection("photo")
 
 	userId, err := primitive.ObjectIDFromHex(id)
-
 	if err != nil {
 		return err
 	}
 
 	err = photoCollection.FindOne(context.Background(), bson.M{"_id": userId}).Decode(photo)
-
 	if err != nil {
 		return err
 	}
@@ -90,15 +84,11 @@ func LoadPhotosFromJsonPlaceholder() ([]photo.PhotoLoadDto, error) {
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
-
 	if err != nil {
 		return photos, err
 	}
 
 	err = json.Unmarshal(body, &photos)
-
-	fmt.Println(err)
-
 	if err != nil {
 		return photos, err
 	}
@@ -110,13 +100,11 @@ func InsertPhotos(userId string, photos []photo.PhotoLoadDto) error {
 	var photoCollection *mongo.Collection = database.MI.DB.Collection("photo")
 
 	ownerId, err := primitive.ObjectIDFromHex(userId)
-
 	if err != nil {
 		return err
 	}
 
 	albumsMap, err := GetAlbumsFromPhotos(ownerId, photos)
-
 	if err != nil {
 		return err
 	}
@@ -141,14 +129,12 @@ func InsertPhotos(userId string, photos []photo.PhotoLoadDto) error {
 	}
 
 	err = album.InsertAlbums(userId, &albums)
-
 	if err != nil {
 		return err
 	}
 
 	// TODO add transaction or albums will be empty
 	_, err = photoCollection.InsertMany(context.Background(), photoDocs)
-
 	if err != nil {
 		return err
 	}

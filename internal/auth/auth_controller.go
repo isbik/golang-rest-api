@@ -63,6 +63,7 @@ func Register() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+		
 		if result > 0 {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Email already taken"})
 			return

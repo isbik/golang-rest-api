@@ -17,7 +17,6 @@ func main() {
 	viper.AutomaticEnv()
 
 	err := config.ReadConf()
-
 	if err != nil {
 		log.Fatalf("Read config: %v", err)
 	}

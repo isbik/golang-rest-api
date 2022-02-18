@@ -16,7 +16,6 @@ func GetUser() gin.HandlerFunc {
 
 		var user User
 		err := FindUserById(userId, &user)
-
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusNotFound, err)
 			return
@@ -29,7 +28,6 @@ func GetUser() gin.HandlerFunc {
 func GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		users, err := FindAllUsers()
-
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, err)
 			return
@@ -45,7 +43,6 @@ func GetCurrentUser() gin.HandlerFunc {
 		var user User
 
 		err := FindUserById(userId, &user)
-
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, err)
 			return

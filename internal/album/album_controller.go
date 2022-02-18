@@ -12,7 +12,6 @@ func DeleteAlbum() gin.HandlerFunc {
 		albumId := c.Param("album_id")
 
 		err := DeleteAlbumById(albumId)
-
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusNotFound, err)
 			return
@@ -30,17 +29,17 @@ func UpdateAlbum() gin.HandlerFunc {
 		var album Album
 
 		err := c.ShouldBindJSON(&album)
-
 		if err == nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, err)
 			return
 		}
-		err = UpdateAlbumById(albumId, &album)
 
+		err = UpdateAlbumById(albumId, &album)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, err)
 			return
 		}
+
 		c.JSON(http.StatusOK, album)
 	}
 }

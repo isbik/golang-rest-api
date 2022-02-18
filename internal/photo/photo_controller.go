@@ -50,7 +50,6 @@ func GetPhoto() gin.HandlerFunc {
 		var photo Photo
 
 		err := FindPhotoById(photoId, &photo)
-
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusNotFound, err)
 			return

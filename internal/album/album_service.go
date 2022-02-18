@@ -13,7 +13,6 @@ func UpdateAlbumById(id string, album *Album) error {
 	var albumCollection *mongo.Collection = database.MI.DB.Collection("album")
 
 	albumId, err := primitive.ObjectIDFromHex(id)
-
 	if err != nil {
 		return err
 	}
@@ -23,7 +22,6 @@ func UpdateAlbumById(id string, album *Album) error {
 			"title", album.Title,
 		}}},
 	)
-
 	if err != nil {
 		return err
 	}
@@ -35,13 +33,11 @@ func DeleteAlbumById(id string) error {
 	var albumCollection *mongo.Collection = database.MI.DB.Collection("album")
 
 	albumId, err := primitive.ObjectIDFromHex(id)
-
 	if err != nil {
 		return err
 	}
 
 	_, err = albumCollection.DeleteOne(context.Background(), bson.M{"_id": albumId})
-
 	if err != nil {
 		return err
 	}
@@ -59,7 +55,6 @@ func InsertAlbums(id string, albums *[]Album) error {
 	}
 
 	_, err := albumCollection.InsertMany(context.Background(), docs)
-
 	if err != nil {
 		return err
 	}

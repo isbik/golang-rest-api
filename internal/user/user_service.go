@@ -17,7 +17,6 @@ func CreateUser(user *User) error {
 	user.CreatedAt = time.Now().Format(time.RFC3339)
 
 	_, err := userCollection.InsertOne(context.Background(), user)
-
 	if err != nil {
 		return err
 	}
@@ -29,10 +28,9 @@ func CountUsersByEmail(email string) (int64, error) {
 	var userCollection *mongo.Collection = database.MI.DB.Collection("user")
 
 	var ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
-
-	count, err := userCollection.CountDocuments(ctx, bson.M{"email": email})
 	defer cancel()
 
+	count, err := userCollection.CountDocuments(ctx, bson.M{"email": email})
 	if err != nil {
 		return 0, err
 	}
@@ -44,13 +42,11 @@ func FindUserById(id string, user *User) error {
 	var userCollection *mongo.Collection = database.MI.DB.Collection("user")
 
 	userId, err := primitive.ObjectIDFromHex(id)
-
 	if err != nil {
 		return err
 	}
 
 	err = userCollection.FindOne(context.Background(), bson.M{"_id": userId}).Decode(user)
-
 	if err != nil {
 		return err
 	}
@@ -62,7 +58,6 @@ func FindUserByEmail(email string, user *User) error {
 	var userCollection *mongo.Collection = database.MI.DB.Collection("user")
 
 	err := userCollection.FindOne(context.Background(), bson.M{"email": email}).Decode(user)
-
 	if err != nil {
 		return err
 	}
@@ -76,7 +71,6 @@ func FindAllUsers() ([]User, error) {
 	var users []User
 
 	cursor, err := userCollection.Find(context.Background(), bson.D{{}})
-
 	if err != nil {
 		return users, err
 	}
